@@ -14,55 +14,96 @@ function MongoAccessor() {
     
     var MongoURL;
     //var fnPrivate = new Object(); //private function storage
-    var oEmitter = new EventEmitter(); //need to encapsolate this better
+    //var oEmitter = new EventEmitter(); //need to encapsolate this better
     
     this.init = function (strMongoConnectionURL) {
         MongoURL = strMongoConnectionURL;
     };
     
     this.GetProjectBoxList = function () {
-        var fnPrivate = new MongoPrivates(MongoURL, oEmitter);
+        var oEmitter = new EventEmitter(); 
+   
+        var oQuery = (new MongoQuery).init(
+            MongoURL, 
+            "findOne", 
+            "ProjectBoxList", 
+            { _id: 'CurrentProjectBoxList' }
+        );
         
-        fnPrivate.MongoConnect(fnPrivate.GetProjectBoxListCallback);
-        
+        var r = oQuery.MongoRun();
+        r.on('error', function (e) {
+            oEmitter.emit('error', e);
+            oEmitter.emit('close');
+        });
+        r.on('data', function (d) {
+            oEmitter.emit('data', d);
+            oEmitter.emit('close'); //only need to wait for data, single return value
+        });
+
         return oEmitter;
     };
     
 }
 
-/*****************Private functions****************/
-function MongoPrivates(MongoURL, oEmitter) {
-    var MongoURL = MongoURL;
-    var oEmitter = oEmitter;
+function MongoQuery() {
+    var _strMongoURL;
+    var _oEmitter;
+    var _strQueryType;
+    var _strCollection;
+    var _oQuery;
+    var _oInstance = this;
+    var _oEmitter = new EventEmitter();
+    var _fnPrivate = new Object();
+    
 
-    this.MongoConnect = function (fnCallback) {
-        MongoClient.connect(MongoURL, fnCallback);
+    //Initialize the current object
+    this.init = function (MongoURL, strQueryType, strCollection, oQuery) {
+        _strMongoURL = MongoURL;
+        _strQueryType = strQueryType;
+        _strCollection = strCollection;
+        _oQuery = oQuery;
+
+        return _oInstance;
+    }
+    
+    this.MongoRun = function () {
+        var fnCallback = _fnPrivate.FindOne;
+
+        MongoClient.connect(_strMongoURL, fnCallback);
+        
+        return _oEmitter;
+    };
+    
+    _fnPrivate.HandleError = function (e) {
+        console.log("Error triggered: " + JSON.stringify(e));
+        
+        _oEmitter.emit("error", e);
+        
+        _oEmitter.emit("close");
     };
 
-    this.GetProjectBoxListCallback = function (err, db) {
-        //assert.equal(null, err); //check good connection to database
-        if (err != null) {
-            console.log("Unable to connect to mongo database!");
-            oEmitter.emit("error", err);
-            oEmitter.emit("close");
-        } else {
+    _fnPrivate.FindOne = function (err, db) {
+        try {
+            if (err != null) throw err;
+            
             console.log('Retrieving Record....\n');
             
-            db.collection("ProjectBoxList").findOne({ _id: 'CurrentProjectBoxList' }, function (err, document) {
+            db.collection(_strCollection).findOne(_oQuery, function (err, document) {
                 console.log("Found data to return.");
                 
-                if (err != null)
-                    oEmitter.emit('error', err);
-                else
-                    oEmitter.emit('data', document);
+                if (err != null) throw err;
+                    
+                _oEmitter.emit('data', document);
                 
                 db.close();
                 
-                oEmitter.emit("close"); //signal to listener that we are done
+                _oEmitter.emit("close"); //signal to listener that we are done
                 
                 console.log("Done pulling data");
             
             });
+        } catch (e) {
+            _fnPrivate.HandleError(e);
         }
     };
 }
