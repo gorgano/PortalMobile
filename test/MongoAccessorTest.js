@@ -44,6 +44,7 @@ function MongoQueryMock(booSuccess) {
     this.init = function () { };
     
     this.MongoRun = function () {
+        console.log("running mongo!!!! not!");
         if (booSuccess)
             return success();
         else

@@ -1,4 +1,4 @@
-var MongoClient = require('mongodb').MongoClient;
+﻿var MongoClient = require('mongodb').MongoClient;
 var EventEmitter = require('events').EventEmitter;
 
 module.exports = {
@@ -26,13 +26,13 @@ function MongoAccessor() {
     
     this.init = function (strMongoConnectionURL) {
         _MongoURL = strMongoConnectionURL;
-        console.log("running normal init...");
+        
         return _oInstance;
     };
     
     this.GetProjectBoxList = function () {
         var oEmitter = new EventEmitter(); 
-   
+        
         var oQuery = (new _fnMongoQuery).init(
             _MongoURL, 
             "findOne", 
