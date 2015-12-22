@@ -40,24 +40,29 @@ function MongoPrivates(MongoURL, oEmitter) {
     };
 
     this.GetProjectBoxListCallback = function (err, db) {
-        assert.equal(null, err); //check good connection to database
-        
-        console.log('Retrieving Record....\n');
-        
-        db.collection("ProjectBoxList").findOne({ _id: 'CurrentProjectBoxList' }, function (err, document) {
-            console.log("Found data to return.");
+        //assert.equal(null, err); //check good connection to database
+        if (err != null) {
+            console.log("Unable to connect to mongo database!");
+            oEmitter.emit("error", err);
+            oEmitter.emit("close");
+        } else {
+            console.log('Retrieving Record....\n');
             
-            if (err != null)
-                oEmitter.emit('error', err);
-            else
-                oEmitter.emit('data', document);
+            db.collection("ProjectBoxList").findOne({ _id: 'CurrentProjectBoxList' }, function (err, document) {
+                console.log("Found data to return.");
+                
+                if (err != null)
+                    oEmitter.emit('error', err);
+                else
+                    oEmitter.emit('data', document);
+                
+                db.close();
+                
+                oEmitter.emit("close"); //signal to listener that we are done
+                
+                console.log("Done pulling data");
             
-            db.close();
-            
-            oEmitter.emit("close"); //signal to listener that we are done
-            
-            console.log("Done pulling data");
-            
-        });
+            });
+        }
     };
 }
