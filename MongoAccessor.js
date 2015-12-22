@@ -1,5 +1,4 @@
-﻿var MongoClient = require('mongodb').MongoClient;
-var assert = require('assert');
+var MongoClient = require('mongodb').MongoClient;
 var EventEmitter = require('events').EventEmitter;
 
 module.exports = {
@@ -14,7 +13,7 @@ module.exports = {
         var oAccessor = (new MongoAccessor()).init(strMongoConnectionURL);
         return oAccessor.GetProjectBoxList();
     }
-}
+};
 
 function MongoAccessor() {
     
@@ -27,7 +26,7 @@ function MongoAccessor() {
     
     this.init = function (strMongoConnectionURL) {
         _MongoURL = strMongoConnectionURL;
-        
+        console.log("running normal init...");
         return _oInstance;
     };
     
@@ -58,7 +57,6 @@ function MongoAccessor() {
 
 function MongoQuery() {
     var _strMongoURL;
-    var _oEmitter;
     var _strQueryType;
     var _strCollection;
     var _oQuery;
@@ -75,7 +73,7 @@ function MongoQuery() {
         _oQuery = oQuery;
 
         return _oInstance;
-    }
+    };
     
     this.MongoRun = function () {
         var fnCallback = _fnPrivate.FindOne;
