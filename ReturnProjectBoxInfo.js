@@ -10,7 +10,7 @@ var MongoAccessor = require('./MongoAccessor.js');
 var strMongoURL = 'mongodb://localhost/DeploymentPortalMobile';
 /**********************/
 
-var oMongo = MongoAccessor.create(strMongoURL);
+//var oMongo = MongoAccessor.create(strMongoURL);
 
 http.createServer(function (request, response) {
 	try
@@ -36,7 +36,7 @@ dispatcher.onGet("/AllProjects", function (request, response)
     
     //var oMongo = MongoAccessor.create(strMongoURL);
     //var oEmit = oMongo.GetProjectBoxList();
-    var oEmit = MongoAccessor.GetProjectBoxList()
+    var oEmit = MongoAccessor.GetProjectBoxList(strMongoURL);
     
     oEmit.on("error", function (error) {
         response.write(JSON.stringify(error));
