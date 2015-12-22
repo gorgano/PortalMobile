@@ -7,7 +7,7 @@
         "name": "hurstj",
         "email": "jason.hurst@cdk.com"
     },
-    "keywords": [],
+    "keywords": [ ],
     "licenses": {
         "type": "none"
     },
@@ -17,5 +17,9 @@
     },
     "bugs": {
         "url": "http://github.com/YOUR_LOGIN/DeploymentPortalNode/issues"
+    },
+
+    "scripts": { 
+        "test": "mocha test"
     }
 }

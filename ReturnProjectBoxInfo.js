@@ -39,20 +39,58 @@ dispatcher.onGet("/AllProjects", function (request, response)
         response.writeHead(200, {'Content-Type': 'text/plain'});
 
         
-        response.write('Retrieving Record....\n');
+        console.log('Retrieving Record....\n');
+        
+        db.collection("ProjectBoxList").findOne({ _id: 'CurrentProjectBoxList' }, function (err, document) {
+            assert.equal(null, err);
+            
+            //console.log(JSON.stringify(document));
 
-        db.collection("ProjectBoxList").find({ _id: 'CurrentProjectBoxList' })
-            .stream()
-            .pipe(JSONStream.stringify())
-            .pipe(response);
+            response.end(JSON.stringify(document));
+            
+            db.close();
+            
+            console.log("Done pulling data");
+        });
+        
+        //var strData = '';
+
+        //var stream = db.collection("ProjectBoxList").find({ _id: 'CurrentProjectBoxList' })
+        //    .stream();
+        //    //.pipe(JSONStream.stringify())
+        //    //.pipe(response);
+        
+        //stream.on("data", function (data) {
+        //    console.log(JSON.stringify(data));
+        //    //response.write(JSON.stringify(data));
+
+        //    strData += JSON.stringify(data);
+        //});
+        //stream.on("close", function () {
+        //    console.log("Done pulling data");
+            
+        //    db.close();
+            
+        //    response.end(strData);
+        //});
 
         //respone.end("Done");
 
-        db.close();
+        //db.close();
 
-        console.log("Done pulling data");
+        //console.log("waiting for data");
 
 	});
 
 });
+
+
+
+/********Access functions*******/
+
+var oMongoAccessor = function () {
+
+
+}
+
 
