@@ -2,7 +2,10 @@ var http = require('http');
 var dispatcher = require('httpdispatcher');
 var MongoClient = require('mongodb').MongoClient;
 var assert = require('assert');
-var JSONStream = require('JSONStream');
+
+var MongoAccessor = require('./MongoAccessor.js');
+
+
 
 /********config *******/
 var strMongoURL = 'mongodb://localhost/DeploymentPortalMobile';
@@ -31,66 +34,75 @@ dispatcher.setStatic("resources");
 dispatcher.onGet("/AllProjects", function (request, response)
 {
 	console.log("Pulling mongo data....");
-	MongoClient.connect(strMongoURL, function(err, db) 
-	{
-		assert.equal(null, err); //check good connection to database
+    
+    var oMongo = MongoAccessor.create(strMongoURL);
+    var oEmit = oMongo.GetProjectBoxList();
+    
+    oEmit.on("error", function (error) {
+        response.write(JSON.stringify(error));
+    });
+    oEmit.on("data", function (document) {
+        response.write(JSON.stringify(document));
+    });
+    oEmit.on("close", function () {
+        response.end();
+    });
+    
+    
+ //   MongoClient.connect(strMongoURL, function (err, db) 
+	//{
+	//	assert.equal(null, err); //check good connection to database
 
                                 
-        response.writeHead(200, {'Content-Type': 'text/plain'});
+ //       response.writeHead(200, {'Content-Type': 'text/plain'});
 
         
-        console.log('Retrieving Record....\n');
+ //       console.log('Retrieving Record....\n');
+
+
+ //       db.collection("ProjectBoxList").findOne({ _id: 'CurrentProjectBoxList' }, function (err, document) {
+ //           assert.equal(null, err);
+            
+ //           //console.log(JSON.stringify(document));
+
+ //           response.end(JSON.stringify(document));
+            
+ //           db.close();
+            
+ //           console.log("Done pulling data");
+ //       });
         
-        db.collection("ProjectBoxList").findOne({ _id: 'CurrentProjectBoxList' }, function (err, document) {
-            assert.equal(null, err);
-            
-            //console.log(JSON.stringify(document));
+ //       //var strData = '';
 
-            response.end(JSON.stringify(document));
-            
-            db.close();
-            
-            console.log("Done pulling data");
-        });
+ //       //var stream = db.collection("ProjectBoxList").find({ _id: 'CurrentProjectBoxList' })
+ //       //    .stream();
+ //       //    //.pipe(JSONStream.stringify())
+ //       //    //.pipe(response);
         
-        //var strData = '';
+ //       //stream.on("data", function (data) {
+ //       //    console.log(JSON.stringify(data));
+ //       //    //response.write(JSON.stringify(data));
 
-        //var stream = db.collection("ProjectBoxList").find({ _id: 'CurrentProjectBoxList' })
-        //    .stream();
-        //    //.pipe(JSONStream.stringify())
-        //    //.pipe(response);
-        
-        //stream.on("data", function (data) {
-        //    console.log(JSON.stringify(data));
-        //    //response.write(JSON.stringify(data));
-
-        //    strData += JSON.stringify(data);
-        //});
-        //stream.on("close", function () {
-        //    console.log("Done pulling data");
+ //       //    strData += JSON.stringify(data);
+ //       //});
+ //       //stream.on("close", function () {
+ //       //    console.log("Done pulling data");
             
-        //    db.close();
+ //       //    db.close();
             
-        //    response.end(strData);
-        //});
+ //       //    response.end(strData);
+ //       //});
 
-        //respone.end("Done");
+ //       //respone.end("Done");
 
-        //db.close();
+ //       //db.close();
 
-        //console.log("waiting for data");
+ //       //console.log("waiting for data");
 
-	});
+	//});
 
 });
 
 
-
-/********Access functions*******/
-
-var oMongoAccessor = function () {
-
-
-}
 
 
