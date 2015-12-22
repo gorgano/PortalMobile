@@ -24,7 +24,7 @@
     <Compile Include="MongoAccessor.js" />
     <Compile Include="ReturnProjectBoxInfo.js" />
     <Compile Include="SDMProfileUpload.js" />
-    <Compile Include="test\ReturnProjectBoxInfoTests.js">
+    <Compile Include="test\MongoAccessorTest.js">
       <SubType>Code</SubType>
       <TestFramework>Mocha</TestFramework>
     </Compile>

@@ -3,28 +3,39 @@ var assert = require('assert');
 var EventEmitter = require('events').EventEmitter;
 
 module.exports = {
+    //Create and return a new instance of the MongoAccessor
     create: function (strMongoConnectionURL) {
-        var oAccessor = new MongoAccessor();
-        oAccessor.init(strMongoConnectionURL);
-        return oAccessor;
+        return (new MongoAccessor()).init(strMongoConnectionURL);
+    },
+    //Conveniance 'static' function to instantiate a new instance of
+    // MongoAccessor, call the GetProjectBoxList method and return the
+    // event processor.
+    GetProjectBoxList: function (strMongoConnectionURL) {
+        var oAccessor = (new MongoAccessor()).init(strMongoConnectionURL);
+        return oAccessor.GetProjectBoxList();
     }
 }
 
 function MongoAccessor() {
     
-    var MongoURL;
+    var _MongoURL;
+    var _oInstance = this;
+    var _fnMongoQuery = MongoQuery;
+
     //var fnPrivate = new Object(); //private function storage
     //var oEmitter = new EventEmitter(); //need to encapsolate this better
     
     this.init = function (strMongoConnectionURL) {
-        MongoURL = strMongoConnectionURL;
+        _MongoURL = strMongoConnectionURL;
+        
+        return _oInstance;
     };
     
     this.GetProjectBoxList = function () {
         var oEmitter = new EventEmitter(); 
    
-        var oQuery = (new MongoQuery).init(
-            MongoURL, 
+        var oQuery = (new _fnMongoQuery).init(
+            _MongoURL, 
             "findOne", 
             "ProjectBoxList", 
             { _id: 'CurrentProjectBoxList' }

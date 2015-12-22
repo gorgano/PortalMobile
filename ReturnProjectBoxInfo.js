@@ -6,12 +6,11 @@ var assert = require('assert');
 var MongoAccessor = require('./MongoAccessor.js');
 
 
-
 /********config *******/
 var strMongoURL = 'mongodb://localhost/DeploymentPortalMobile';
 /**********************/
 
-
+var oMongo = MongoAccessor.create(strMongoURL);
 
 http.createServer(function (request, response) {
 	try
@@ -35,8 +34,9 @@ dispatcher.onGet("/AllProjects", function (request, response)
 {
 	console.log("Pulling mongo data....");
     
-    var oMongo = MongoAccessor.create(strMongoURL);
-    var oEmit = oMongo.GetProjectBoxList();
+    //var oMongo = MongoAccessor.create(strMongoURL);
+    //var oEmit = oMongo.GetProjectBoxList();
+    var oEmit = MongoAccessor.GetProjectBoxList()
     
     oEmit.on("error", function (error) {
         response.write(JSON.stringify(error));
@@ -100,7 +100,7 @@ dispatcher.onGet("/AllProjects", function (request, response)
  //       //console.log("waiting for data");
 
 	//});
-
+    
 });
 
 
