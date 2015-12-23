@@ -3,11 +3,13 @@ var dispatcher = require('httpdispatcher');
 var MongoClient = require('mongodb').MongoClient;
 var assert = require('assert');
 
+var oConfig = require("./QueueConfig.js");
+
 var MongoAccessor = require('./MongoAccessor.js');
 
 
 /********config *******/
-var strMongoURL = 'mongodb://localhost/DeploymentPortalMobile';
+//var strMongoURL = 'mongodb://localhost/DeploymentPortalMobile';
 /**********************/
 
 //var oMongo = MongoAccessor.create(strMongoURL);
@@ -22,9 +24,10 @@ http.createServer(function (request, response) {
 	{
 		console.log(e);
 	}
-}).listen(1337, "127.0.0.1");
+}).listen(oConfig.intWebServerPort, oConfig.strWebServerIP);
 
-console.log("Started server on port 1337\nUsing the following to connect to mongo: " + strMongoURL);
+console.log("Started server on port: " + oConfig.intWebServerPort +
+    "\nUsing the following to connect to mongo: " + oConfig.strMongoURL);
 
 
 dispatcher.setStatic("resources");
@@ -36,7 +39,7 @@ dispatcher.onGet("/AllProjects", function (request, response)
     
     //var oMongo = MongoAccessor.create(strMongoURL);
     //var oEmit = oMongo.GetProjectBoxList();
-    var oEmit = MongoAccessor.GetProjectBoxList(strMongoURL);
+    var oEmit = MongoAccessor.GetProjectBoxList(oConfig.strMongoURL);
     
     oEmit.on("error", function (error) {
         response.write(JSON.stringify(error));
