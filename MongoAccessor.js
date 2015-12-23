@@ -15,18 +15,25 @@ module.exports = {
     }
 };
 
+//Provides exposure to override functionality when unit testing
+if (process.env.NODE_ENV === 'test') {
+    module.exports.createWithMongoQueryOverride = function (strMongoConnectionURL, fnMongoQueryOverride) {
+        return (new MongoAccessor()).init(strMongoConnectionURL, fnMongoQueryOverride);
+    }
+}
+
 function MongoAccessor() {
     
     var _MongoURL;
     var _oInstance = this;
     var _fnMongoQuery = MongoQuery;
 
-    //var fnPrivate = new Object(); //private function storage
-    //var oEmitter = new EventEmitter(); //need to encapsolate this better
-    
-    this.init = function (strMongoConnectionURL) {
+    this.init = function (strMongoConnectionURL, fnMongoQueryOverride) {
         _MongoURL = strMongoConnectionURL;
         
+        if (fnMongoQueryOverride != null)
+            _fnMongoQuery = fnMongoQueryOverride;
+
         return _oInstance;
     };
     
@@ -41,6 +48,7 @@ function MongoAccessor() {
         );
         
         var r = oQuery.MongoRun();
+
         r.on('error', function (e) {
             oEmitter.emit('error', e);
             oEmitter.emit('close');
