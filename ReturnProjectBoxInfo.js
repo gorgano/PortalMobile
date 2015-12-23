@@ -1,3 +1,5 @@
+//note: replaced with ServiceDefinitions.js and StartServer.js
+
 var http = require('http');
 var dispatcher = require('httpdispatcher');
 var MongoClient = require('mongodb').MongoClient;

@@ -6,7 +6,7 @@
     <ProjectGuid>{289dea76-822d-42d3-b6c0-98e909bbbafa}</ProjectGuid>
     <ProjectHome />
     <ProjectView>ShowAllFiles</ProjectView>
-    <StartupFile>ReturnProjectBoxInfo.js</StartupFile>
+    <StartupFile>StartServer.js</StartupFile>
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
     <ProjectTypeGuids>{3AF33F2E-1136-4D97-BBB7-1795711AC8B8};{349c5851-65df-11da-9384-00065b846f21};{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}</ProjectTypeGuids>
@@ -25,9 +25,15 @@
     <Compile Include="QueueConfig.js" />
     <Compile Include="ReturnProjectBoxInfo.js" />
     <Compile Include="SDMProfileUpload.js" />
+    <Compile Include="ServiceDefintions.js" />
+    <Compile Include="StartServer.js" />
     <Compile Include="test\MongoAccessorTest.js">
       <SubType>Code</SubType>
       <TestFramework>Mocha</TestFramework>
+    </Compile>
+    <Compile Include="test\ReturnProjectBoxInfoTest.js">
+      <SubType>Code</SubType>
+      <TestFramework>ExportRunner</TestFramework>
     </Compile>
     <Compile Include="WatchSDMDatabase.js" />
   </ItemGroup>
