@@ -17,3 +17,6 @@ obj/Debug
 .gitignore
 my.gitignore
 
+/.vscode
+/gulpfile.js
+/.ntvs_analysis.dat
